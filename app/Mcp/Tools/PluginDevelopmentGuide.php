@@ -52,7 +52,8 @@ class PluginDevelopmentGuide extends Tool
             $overview[] = Markdown::summary($readme->content, 700);
         }
 
-        if ($intro = $this->document($meta, 'docs/plugins/introduction.md')) {
+        // The docs moved folder introductions to README.md; older releases still have introduction.md.
+        if ($intro = $this->document($meta, 'docs/plugins/README.md') ?? $this->document($meta, 'docs/plugins/introduction.md')) {
             $overview[] = $this->limit(Markdown::demoteHeadings(Markdown::body($intro->content), 1), 2500);
             $overview[] = $this->source($intro);
         }
@@ -86,7 +87,7 @@ class PluginDevelopmentGuide extends Tool
         // 5. Components
         $parts[] = $this->chapter('## 5. Registering components (resources, pages, widgets)', [
             [$this->document($meta, 'docs/plugins/components/resources.md'), null],
-            [$this->document($meta, 'docs/plugins/components/introduction.md'), null],
+            [$this->document($meta, 'docs/plugins/components/README.md') ?? $this->document($meta, 'docs/plugins/components/introduction.md'), null],
         ], all: true);
 
         // 6. Frontend

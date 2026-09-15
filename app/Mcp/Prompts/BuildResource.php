@@ -43,11 +43,12 @@ class BuildResource extends Prompt
         $meta = Catalog::metaPackage();
 
         $context = collect([
-            [Catalog::META_PACKAGE, 'docs/getting-started/first-resource.md', 7000],
-            [Catalog::META_PACKAGE, 'docs/panel/resources/introduction.md', 5000],
+            [Catalog::META_PACKAGE, ['docs/getting-started/first-resource.md'], 7000],
+            // The docs moved folder introductions to README.md; older releases still have introduction.md.
+            [Catalog::META_PACKAGE, ['docs/panel/resources/README.md', 'docs/panel/resources/introduction.md'], 5000],
         ])->map(function (array $candidate): ?string {
-            [$package, $path, $limit] = $candidate;
-            $document = Catalog::firstDocument([[$package, $path]]);
+            [$package, $paths, $limit] = $candidate;
+            $document = Catalog::firstDocument(array_map(fn (string $path): array => [$package, $path], $paths));
 
             return $document ? Catalog::embed($document, 2, $limit) : null;
         })->filter()->implode("\n\n");
